@@ -1,5 +1,5 @@
 # Visit to the link
-https://shubham-singh0109.github.io/DV_Activity_6/
+https://milkyy-way.github.io/CT-Scan_Vizualization/
 
 
 **Visualization Features:**
