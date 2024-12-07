@@ -17,13 +17,13 @@
         <label for="binCount">Bin Count</label>
         <input type="range" id="binCount" min="2" max="20" value="10" step="1" />
 
-        <!-- Slider for adjusting minimum threshold -->
-        <label for="minThreshold">Min Threshold</label>
-        <input type="range" id="minThreshold" min="0" max="100" value="0" />
+        <!-- Slider for adjusting minimum value -->
+        <label for="minValue">Min Value</label>
+        <input type="range" id="minValue" min="0" max="100" value="0" />
 
-        <!-- Slider for adjusting maximum threshold -->
-        <label for="maxThreshold">Max Threshold</label>
-        <input type="range" id="maxThreshold" min="0" max="1000" value="300" />
+        <!-- Slider for adjusting maximum value -->
+        <label for="maxValue">Max Value</label>
+        <input type="range" id="maxValue" min="0" max="1000" value="300" />
     </div>
 
     <hr />
@@ -50,10 +50,10 @@
 
     // Default values for sliders
     let currentBinCount = document.querySelector("#binCount").value;
-    let currentMin = document.querySelector("#minThreshold").value;
-    let currentMax = document.querySelector("#maxThreshold").value;
+    let currentMin = document.querySelector("#minValue").value;
+    let currentMax = document.querySelector("#maxValue").value;
 
-    let minValue, maxValue; // Variables to store min and max values of data
+    let minDataValue, maxDataValue; // Variables to store min and max values of data
 
     // Function to plot contour based on file data
     function plot_contour(fileNumber) {
@@ -70,29 +70,25 @@
 
             // Calculate min and max values of the data
             const min_max = d3.extent(values_density, d => d);
-            minValue = min_max[0];
-            maxValue = min_max[1];
+            minDataValue = min_max[0];
+            maxDataValue = min_max[1];
 
             // Update slider ranges based on data
-            document.querySelector("#minThreshold").min = minValue;
-            document.querySelector("#minThreshold").max = maxValue;
-            document.querySelector("#maxThreshold").min = minValue;
-            document.querySelector("#maxThreshold").max = maxValue;
+            document.querySelector("#minValue").min = minDataValue;
+            document.querySelector("#minValue").max = maxDataValue;
+            document.querySelector("#maxValue").min = minDataValue;
+            document.querySelector("#maxValue").max = maxDataValue;
 
-
-            
             // Function to draw contours
-            function draw(binCount, minThreshold, maxThreshold) {
+            function draw(binCount, minValue, maxValue) {
                 const colors = d3.scaleLinear()
-                
-                    .domain(d3.range(minThreshold, maxThreshold, (maxThreshold - minThreshold) / binCount))
+                    .domain(d3.range(minValue, maxValue, (maxValue - minValue) / binCount))
                     .range(["#0d1a50", "#3e5eba", "#2b83ba", "#abdda4", "#ffffbf", "#fdae61", "#d7191c"])
                     .interpolate(d3.interpolateHcl);
 
                 let contours = d3.contours()
                     .size([m, n])
-                    
-                    .thresholds(d3.range(minThreshold, maxThreshold, (maxThreshold - minThreshold) / binCount))
+                    .thresholds(d3.range(minValue, maxValue, (maxValue - minValue) / binCount))
                     (values_density);
                 svg.selectAll(".contours").remove();
 
@@ -115,11 +111,11 @@
             // Event listener for slider input changes
             document.addEventListener("input", e => {
                 currentBinCount = document.querySelector("#binCount").value;
-                currentMin = document.querySelector("#minThreshold").value;
-                currentMax = document.querySelector("#maxThreshold").value;
+                currentMin = document.querySelector("#minValue").value;
+                currentMax = document.querySelector("#maxValue").value;
 
                 const tagId = e.target.id;
-                if (tagId === "binCount" || tagId === "minThreshold" || tagId === "maxThreshold") {
+                if (tagId === "binCount" || tagId === "minValue" || tagId === "maxValue") {
                     draw(currentBinCount, currentMin, currentMax);
                 }
             });
